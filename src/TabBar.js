@@ -33,6 +33,7 @@ type Props<T> = SceneRendererProps<T> & {
   getAccessibilityLabel: (scene: Scene<T>) => ?string,
   getTestID: (scene: Scene<T>) => ?string,
   renderLabel?: (scene: Scene<T>) => React.Node,
+  onScroll?: (event?: NativeSyntheticEvent<NativeScrollEvent>, scrollView: ?ScrollView, tabWidth?: number) => void;
   renderIcon?: (scene: Scene<T>) => React.Node,
   renderBadge?: (scene: Scene<T>) => React.Node,
   renderIndicator?: (props: IndicatorProps<T>) => React.Node,
@@ -66,6 +67,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     renderLabel: PropTypes.func,
     renderIndicator: PropTypes.func,
     onTabPress: PropTypes.func,
+    onScroll: PropTypes.func,
     labelStyle: PropTypes.any,
     style: PropTypes.any,
   };
@@ -347,6 +349,9 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
   render() {
     const { position, navigationState, scrollEnabled, bounces } = this.props;
     const { routes } = navigationState;
+    if(routes == null || routes.length < 1){
+      return <View />;
+    }
     const tabWidth = this._getTabWidth(this.props);
     const tabBarWidth = tabWidth * routes.length;
 
@@ -394,7 +399,15 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   },
                 },
               ],
-              { useNativeDriver }
+              {
+                useNativeDriver: true,
+                listener: event => {
+                  if (this.props.onScroll) {
+                    this.props.onScroll(event, this._scrollView, tabWidth);
+                  }
+                  
+                },
+              }
             )}
             onScrollBeginDrag={this._handleBeginDrag}
             onScrollEndDrag={this._handleEndDrag}
