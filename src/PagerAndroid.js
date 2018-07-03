@@ -41,7 +41,7 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
     } else if (
       prevProps.navigationState.index !== this.props.navigationState.index
     ) {
-      this._handlePageChange(this.props.navigationState.index);
+      this._handlePageChange(this.props.navigationState.index, false);
     }
   }
 
@@ -99,7 +99,7 @@ export default class PagerAndroid<T: *> extends React.Component<Props<T>> {
     if (this.props.canJumpToTab({ route: nextRoute })) {
       this.props.jumpTo(nextRoute.key);
     } else {
-      this._setPage(this.props.navigationState.index);
+      this._setPage(this.props.navigationState.index, false);
       this._currentIndex = this.props.navigationState.index;
     }
 

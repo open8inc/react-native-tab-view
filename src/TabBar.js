@@ -136,7 +136,7 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
     ) {
       this._resetScroll(this.props.navigationState.index, false);
     } else if (prevProps.navigationState.index !== pendingIndex) {
-      this._resetScroll(this.props.navigationState.index);
+      this._resetScroll(this.props.navigationState.index, false);
     }
   }
 
@@ -186,8 +186,6 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
         : -navigationState.index * layout.width;
 
     const value = (panX + offsetX) / -(layout.width || 0.001);
-
-    this._adjustScroll(value);
   };
 
   _renderLabel = (scene: Scene<*>) => {
@@ -405,7 +403,6 @@ export default class TabBar<T: *> extends React.Component<Props<T>, State> {
                   if (this.props.onScroll) {
                     this.props.onScroll(event, this._scrollView, tabWidth);
                   }
-                  
                 },
               }
             )}
